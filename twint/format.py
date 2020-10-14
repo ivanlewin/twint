@@ -11,7 +11,7 @@ def Tweet(config, t):
         output = output.replace("{user_id}", t.user_id_str)
         output = output.replace("{username}", t.username)
         output = output.replace("{name}", t.name)
-        output = output.replace("{place}", t.place)
+        output = output.replace("{place}", json.dumps(t.place))
         output = output.replace("{timezone}", t.timezone)
         output = output.replace("{urls}", ",".join(t.urls))
         output = output.replace("{photos}", ",".join(t.photos))
