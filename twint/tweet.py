@@ -82,7 +82,18 @@ def Tweet(tw, config):
     t.user_id_str = tw["user_id_str"]
     t.username = tw["user_data"]['screen_name']
     t.name = tw["user_data"]['name']
-    t.place = tw['geo'] if 'geo' in tw and tw['geo'] else ""
+    place_name = ""
+    if tw['place']:
+        if tw['place']['full_name']:
+            place_name = tw['place']['full_name'] + " - "
+        else:
+            try:
+                place_name = 'name' in tw['place']['name']
+            except KeyError:
+                place_name = ""
+        if tw['place']['country']:
+            place_name += tw['place']['country']
+    t.place = place_name
     t.timezone = strftime("%z", localtime())
     t.mentions = _get_mentions(tw)
     t.reply_to = _get_reply_to(tw)
