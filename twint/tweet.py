@@ -61,6 +61,18 @@ def _get_reply_to(tw):
     return reply_to
 
 
+def getText(tw):
+    """Replace some text
+    """
+    logme.debug(__name__ + ':getText')
+    text = tw['full_text']
+    text = text.replace("http", " http")
+    text = text.replace("pic.twitter", " pic.twitter")
+    text = text.replace("\n", " ")
+
+    return text
+
+
 def Tweet(tw, config):
     """Create Tweet object
     """
@@ -82,18 +94,7 @@ def Tweet(tw, config):
     t.user_id_str = tw["user_id_str"]
     t.username = tw["user_data"]['screen_name']
     t.name = tw["user_data"]['name']
-    place_name = ""
-    if tw['place']:
-        if tw['place']['full_name']:
-            place_name = tw['place']['full_name'] + " - "
-        else:
-            try:
-                place_name = 'name' in tw['place']['name']
-            except KeyError:
-                place_name = ""
-        if tw['place']['country']:
-            place_name += tw['place']['country']
-    t.place = place_name
+    t.place = tw['geo'] if 'geo' in tw and tw['geo'] else ""
     t.timezone = strftime("%z", localtime())
     t.mentions = _get_mentions(tw)
     t.reply_to = _get_reply_to(tw)
@@ -114,7 +115,7 @@ def Tweet(tw, config):
         t.thumbnail = tw['extended_entities']['media'][0]['media_url_https']
     except KeyError:
         t.thumbnail = ''
-    t.tweet = tw['full_text']
+    t.tweet = getText(tw)
     t.lang = tw['lang']
     try:
         t.hashtags = [hashtag['text'] for hashtag in tw['entities']['hashtags']]
