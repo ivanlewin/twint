@@ -27,7 +27,7 @@ def Tweet(config, t):
         output = output.replace("{link}", t.link)
         output = output.replace("{is_retweet}", str(t.retweet))
         output = output.replace("{user_rt_id}", str(t.user_rt_id))
-        output = output.replace("{quote_url}", t.quote_url)
+        output = output.replace("{quote_url}", str(t.quote_url))
         output = output.replace("{near}", t.near)
         output = output.replace("{geo}", t.geo)
         output = output.replace("{mentions}", ",".join([json.dumps(mention) for mention in t.mentions]))
